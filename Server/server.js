@@ -8,6 +8,7 @@ const path = require('path');
 const COMMON_PATHS = {
   soffice: ['/usr/bin/soffice', 'C:\\Program Files\\LibreOffice\\program\\soffice.exe'],
   '7z': ['/usr/bin/7z', 'C:\\Program Files\\7-Zip\\7z.exe', 'C:\\Program Files (x86)\\7-Zip\\7z.exe'],
+  magick: ['/usr/bin/magick', '/usr/bin/convert'],
   gs: [
     '/usr/bin/gs',
     'C:\\Program Files\\gs\\gs10.04.0\\bin\\gswin64c.exe',
