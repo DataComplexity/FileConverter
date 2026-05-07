@@ -3,12 +3,15 @@ const cors = require('cors');
 const { execSync } = require('child_process');
 const fs = require('fs');
 
+const path = require('path');
+
 const COMMON_PATHS = {
-  soffice: ['C:\\Program Files\\LibreOffice\\program\\soffice.exe'],
-  '7z': ['C:\\Program Files\\7-Zip\\7z.exe', 'C:\\Program Files (x86)\\7-Zip\\7z.exe'],
+  soffice: ['/usr/bin/soffice', 'C:\\Program Files\\LibreOffice\\program\\soffice.exe'],
+  '7z': ['/usr/bin/7z', 'C:\\Program Files\\7-Zip\\7z.exe', 'C:\\Program Files (x86)\\7-Zip\\7z.exe'],
   gs: [
+    '/usr/bin/gs',
     'C:\\Program Files\\gs\\gs10.04.0\\bin\\gswin64c.exe',
-    'C:\\Program Files\\gs\\gs10.03.1\\bin\\gswin64c.exe'
+    'C:\\Program Files (x86)\\gs\\gs10.03.1\\bin\\gswin64c.exe'
   ]
 };
 
@@ -21,8 +24,11 @@ function checkSystemBinary(cmd) {
     } catch (e) { }
   }
 
+  const isWin = process.platform === 'win32';
+  const checkCmd = isWin ? `where ${cmd}` : `which ${cmd}`;
+
   try {
-    execSync(`where ${cmd}`, { stdio: 'ignore' });
+    execSync(checkCmd, { stdio: 'ignore' });
     return 'Found';
   } catch (e) {
     const paths = COMMON_PATHS[cmd] || [];
@@ -43,6 +49,17 @@ app.use(express.json());
 // Routes
 const apiRoutes = require('./routes');
 app.use('/api', apiRoutes);
+
+// Serve Frontend Static Files
+const distPath = path.join(__dirname, '../dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(distPath, 'index.html'));
+    }
+  });
+}
 
 
 // Start Server

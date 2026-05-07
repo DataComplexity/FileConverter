@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run server-install",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server-install": "cd Server && npm install",
+    "server-start": "cd Server && node server.js",
+    "start": "npm run server-start"
   },
   "dependencies": {
-    "@rolldown/binding-win32-x64-msvc": "^1.0.0-rc.15",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-typed": "^2.0.12",
